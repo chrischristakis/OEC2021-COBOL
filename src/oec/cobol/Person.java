@@ -25,6 +25,8 @@ public class Person {
 	}
 	
 	public void setInfectivity(double i) {
+		if(i > 1) i = 1;
+		if(i < 0) i = 0;
 		this.infectivity = i;
 	}
 	

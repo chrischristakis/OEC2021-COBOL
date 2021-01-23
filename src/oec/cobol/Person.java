@@ -4,7 +4,7 @@ public class Person {
 	
 	private String fName, lName;
 	private double infectivity = 0;		//Percent value of a student's chance of being infected
-										//100.0 infection means the student is already infected
+										//1.0 infection means the student is already infected
 	
 	/**
 	 * Constructor 
@@ -16,7 +16,9 @@ public class Person {
 		this.lName = lastName;
 	}
 	
+	//Default constructor
 	public Person() {}
+	
 	
 	// Getters and Setters ---
 	
@@ -30,6 +32,14 @@ public class Person {
 		this.infectivity = i;
 	}
 	
+	public void setFirstName(String fName) {
+		this.fName = fName;
+	}
+	
+	public void setLastName(String lName) {
+		this.lName = lName;
+	}
+	
 	public String getFirstName() {
 		return fName;
 	}
@@ -38,14 +48,6 @@ public class Person {
 		return lName;
 	}
 	
-	public void setFirstName(String fName) {
-		this.fName = fName;
-	}
-
-	public void setLastName(String lName) {
-		this.lName = lName;
-	}
-
 	public String getFullName() {
 		return fName + " " + lName;
 	}

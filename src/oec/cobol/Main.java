@@ -3,6 +3,7 @@ package oec.cobol;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -15,8 +16,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Main 
 {
 	
-	ArrayList<Student> students = new ArrayList<Student>();
-	ArrayList<Subject> subjects = new ArrayList<Subject>();
+	static ArrayList<Student> students = new ArrayList<Student>();
+	static HashMap<String, Subject> subjectList = new HashMap<String, Subject>(); //access each subject by name.
+	static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+	static ArrayList<TeachersAssistant> assistants = new ArrayList<TeachersAssistant>();
+	
+	static Period[] period = new Period[6]; //There are 6 periods of classes (1,2,lunch,3,4,extracurriculars)
 	
 	//Holds the information of the entire spreadsheet program
 	private static XSSFWorkbook workbook;
@@ -36,6 +41,10 @@ public class Main
 		{  
 			e.printStackTrace();  
 		}  
+		
+		students.remove(students.get(students.size()-1));//remove last element for a bug fix.
+		
+		System.out.println(period[0]);
 	}
 	
 	//parse through every excel spreadsheet
@@ -110,13 +119,20 @@ public class Main
 	
 	public static void getTeachingAssistantCellInfo(Cell cell, int cellNum) 
 	{
+		if(cellNum == 0)
+			assistants.add(new TeachersAssistant());
+		
+		TeachersAssistant current = assistants.get(assistants.size()-1);
+		
 		switch (cellNum)	//Identify the info held in the current Column, then switch to the next one for next iteration          
 		{  
 			case 0: //LASTNAME
 				System.out.print(cell.getStringCellValue() + "\t\t\t");
+				current.setLastName(cell.getStringCellValue());
 				break;  
 			case 1: //FIRSTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				System.out.print(cell.getStringCellValue() + "\t\t\t"); 
+				current.setFirstName(cell.getStringCellValue());
 				break; 
 			case 2: //PERIOD 1 CLASS
 				System.out.print(cell.getStringCellValue() + "\t\t\t");  
@@ -136,19 +152,28 @@ public class Main
 
 	public static void getTeacherRecordCellInfo(Cell cell, int cellNum)
 	{
+		if(cellNum == 0) 
+			teachers.add(new Teacher()); //When we reach the first cell in a new row, create a new teacher.
+		
+		Teacher current = teachers.get(teachers.size()-1);
+		
 		switch (cellNum)	//Identify the info held in the current Column, then switch to the next one for next iteration          
 		{  
 			case 0: //TEACHERNO 
 				System.out.print(cell.getNumericCellValue() + "\t\t\t");
+				current.setID((int)cell.getNumericCellValue());
 				break;  
 			case 1: //LASTNAME
 				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				current.setLastName(cell.getStringCellValue());
 				break; 
 			case 2: //FIRSTNAME
 				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				current.setFirstName(cell.getStringCellValue());
 				break; 
 			case 3: //CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				System.out.print(cell.getStringCellValue() + "\t\t\t");
+				
 				break; 
 			default:  
 		}  
@@ -156,22 +181,42 @@ public class Main
 
 	public static void getStudentCellInfo(Cell cell, int cellNum) 
 	{
+		if(cellNum == 0) 
+		{
+			if(cell.getNumericCellValue() == 0) return; //to fix a weird bug where id of 0  added.
+			else students.add(new Student()); //When we reach the first cell in a new row, create a new student.
+		}
+		
+		Student current = students.get(students.size()-1); //Get the most recent student in the list
+		
 		switch (cellNum)	//Identify the info held in the current Column, then switch to the next one for next iteration          
 		{  
 			case 0: //STUDENTNO 
-				System.out.print(cell.getNumericCellValue() + "\t\t\t");
+				System.out.print(cell.getNumericCellValue() + "\t\t\t");		
+				current.setID((int)cell.getNumericCellValue());
 				break;  
 			case 1: //LASTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				System.out.print(cell.getStringCellValue() + "\t\t\t");
+				current.setLastName(cell.getStringCellValue());
 				break; 
 			case 2: //FIRSTNAME
 				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				current.setFirstName(cell.getStringCellValue());
 				break; 
 			case 3: //GRADE
-				System.out.print(cell.getNumericCellValue() + "\t\t\t");  
+				System.out.print(cell.getNumericCellValue() + "\t\t\t"); 
+				current.setGrade((int)cell.getNumericCellValue());
 				break; 
 			case 4: //PERIOD 1 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				System.out.print(cell.getStringCellValue() + "\t\t\t"); 
+				String subject = cell.getStringCellValue();
+				if(subjectList.get(subject) == null) //If it doesnt exist in the list yet
+				{
+					subjectList.put(subject, new Subject(subject)); // then add it!
+					//period.add(subjectList.get(subject));
+				}
+				
+				subjectList.get(subject).getStudentList().add(current); //add the current student to the subject in this period.
 				break; 
 			case 5: //PERIOD 2 CLASS
 				System.out.print(cell.getStringCellValue() + "\t\t\t");  
@@ -184,9 +229,10 @@ public class Main
 				break; 
 			case 8: //HEALTH CONDITION
 				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				current.setHealthConditions(cell.getStringCellValue());
 				break; 
 			case 9: //EXTRACURRICULAR
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				System.out.print(cell.getStringCellValue() + "\t\t\t");
 				break; 
 			default:  
 		}  

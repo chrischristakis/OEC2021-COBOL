@@ -2,47 +2,29 @@ package oec.cobol;
 
 public class TeachersAssistant extends Person {
 	
-	private String[] subjectArray;
-
+	private int ID;
+	
 	/**
-	 * 
+	 * Constructor
 	 * @param firstName
 	 * @param lastName
 	 */
-	public TeachersAssistant(String firstName, String lastName, String firstPeriod, String secondPeriod, String thirdPeriod, String fourthPeriod) {
+	public TeachersAssistant(int id, String firstName, String lastName) {
 		super(firstName, lastName);
-		String[] subjectArray = {firstPeriod, secondPeriod, thirdPeriod, fourthPeriod};
-		this.subjectArray = subjectArray;
+		this.ID = id;
 	}
 	
-	public TeachersAssistant() {}
-
+	//Default constructor
+	public TeachersAssistant() {}	
 	
-	// Getters and Setters ---
 	
-	public String getPeriodOneSubject() {
-		return subjectArray[0];
+	//Getters and Setters ---
+	
+	public void setID(int id) {
+		this.ID = id;
 	}
 	
-	public String getPeriodTwoSubject() {
-		return subjectArray[1];
+	public int getID() {
+		return ID;
 	}
-	
-	public String getPeriodThreeSubject() {
-		return subjectArray[2];
-	}
-	
-	public String getPeriodFourSubject() {
-		return subjectArray[3];
-	}
-	
-	public String[] getSubjectArray() {
-		return subjectArray;
-	}
-	
-	public void setSubject(String subject, int index)
-	{
-		subjectArray[index] = subject;
-	}
-	
 }

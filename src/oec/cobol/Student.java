@@ -3,7 +3,7 @@ package oec.cobol;
 public class Student extends Person {
 	
 	private int grade;
-	private String healthConditions = "N/A";
+	private String healthConditions = "N/A";	//Default value
 	private int ID;
 	
 	/**
@@ -19,21 +19,27 @@ public class Student extends Person {
 		this.grade = grade;
 		this.ID = ID;
 	}
-
+	
+	//Default constructor
 	public Student() {}
+
 	
 	// Getters and Setters ---
-
+	
 	public String getHealthConditions() {
 		return this.healthConditions;
+	}
+	
+	public void setHealthConditions(String hc) {
+		this.healthConditions = hc;
 	}
 	
 	public int getGrade() {
 		return grade;
 	}
 	
-	public void setGrade(int grade) {
-		this.grade = grade;
+	public void setGrade(int g) {
+		this.grade = g;
 	}
 	
 	//For each grade above grade 9, we add a 25% higher chance of infection
@@ -51,9 +57,8 @@ public class Student extends Person {
 		return ID;
 	}
 	
-	public void setID(int iD)
-	{
-		ID = iD;
+	public void setID(int id) {
+		this.ID = id;
 	}
 	
 }

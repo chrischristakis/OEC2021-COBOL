@@ -40,8 +40,10 @@ public class Main
 							System.out.print(cell.getNumericCellValue() + "\t\t\t");  
 							break;  
 						default:  
-					}  
-				}  
+					} 
+				
+				}
+				System.out.println();
 			}  
 			wb.close();
 		}  

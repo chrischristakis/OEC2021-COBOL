@@ -2,7 +2,7 @@ package oec.cobol;
 
 public class Teacher extends Person {
 	private int ID;
-
+	
 	/**
 	 * Constructor
 	 * @param firstName

@@ -3,7 +3,6 @@ package oec.cobol;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,7 +16,6 @@ public class Main
 {
 	
 	static ArrayList<Student> students = new ArrayList<Student>();
-	static HashMap<String, Subject> subjectList = new HashMap<String, Subject>(); //access each subject by name.
 	static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 	static ArrayList<TeachersAssistant> assistants = new ArrayList<TeachersAssistant>();
 	
@@ -28,6 +26,14 @@ public class Main
 	
 	public static void main(String[] args) 
 	{
+		//Initialize all periods
+		period[0] = new Period();
+		period[1] = new Period();
+		//period[2] = new Period();
+		period[3] = new Period();
+		period[4] = new Period();
+		//period[5] = new Period();
+		
 		try  
 		{  
 			File file = new File("OEC2021 - School Record Book.xlsx");   //creating a new file instance  
@@ -44,7 +50,18 @@ public class Main
 		
 		students.remove(students.get(students.size()-1));//remove last element for a bug fix.
 		
-		System.out.println(period[0]);
+		for(int j = 0; j < period.length; j++)
+		{
+			if(period[j] == null) continue;
+			System.out.println("----PERIOD " + j + "----");
+			for (String name: period[j].getSubjectList().keySet()){
+	            String key = name.toString();
+	            Subject value = period[j].getSubjectList().get(name);  
+	            System.out.println(key + " " + value.getTeacher().getFullName());
+	            for(int i = 0; i < period[j].getSubjectList().get(name).getStudentList().size(); i++)
+	            	System.out.println(period[j].getSubjectList().get(name).getStudentList().get(i).getID() + " " + value.getStudentList().get(i).getInfectivity());
+			}
+		}
 	}
 	
 	//parse through every excel spreadsheet
@@ -95,22 +112,24 @@ public class Main
 		}
 	}
 	
+	static boolean TA = false;
 	public static void getZBY1StatusCellInfo(Cell cell, int cellNum) 
 	{
 		switch (cellNum)	//Identify the info held in the current Column, then switch to the next one for next iteration          
 		{  
 			case 0: //STUDENTNO 
-				if(cell.getCellTypeEnum() == CellType.STRING) return; //Skip the studentNo if its 'N/A'
-				System.out.print(cell.getNumericCellValue() + "\t\t\t");
+				if(cell.getCellTypeEnum() == CellType.STRING) {TA=true; break;} //Skip the studentNo if its 'N/A'
+				students.get((int)cell.getNumericCellValue()-1).setInfectivity(1.0); //studentno-1 gives index of student in array of students.
 				break;  
 			case 1: //LASTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				for(int i = 0; i < assistants.size(); i++)
+					if(assistants.get(i).getLastName().equals(cell.getStringCellValue()))
+						assistants.get(i).setInfectivity(1.0);
+				TA = false;
 				break; 
 			case 2: //FIRSTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
 				break; 
 			case 3: //STATUS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
 				break; 
 			default:  
 		}  
@@ -124,27 +143,30 @@ public class Main
 		
 		TeachersAssistant current = assistants.get(assistants.size()-1);
 		
+		String subject;
 		switch (cellNum)	//Identify the info held in the current Column, then switch to the next one for next iteration          
 		{  
 			case 0: //LASTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");
 				current.setLastName(cell.getStringCellValue());
 				break;  
 			case 1: //FIRSTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t"); 
 				current.setFirstName(cell.getStringCellValue());
 				break; 
 			case 2: //PERIOD 1 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				subject = cell.getStringCellValue();
+				period[0].getSubjectList().get(subject).getTAList().add(current);
 				break; 
 			case 3: //PERIOD 2 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				subject = cell.getStringCellValue();
+				period[1].getSubjectList().get(subject).getTAList().add(current);
 				break; 
 			case 4: //PERIOD 3 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				subject = cell.getStringCellValue();
+				period[3].getSubjectList().get(subject).getTAList().add(current);
 				break; 
 			case 5: //PERIOD 4 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				subject = cell.getStringCellValue();
+				period[4].getSubjectList().get(subject).getTAList().add(current);
 				break; 
 			default:  
 		}  
@@ -160,20 +182,21 @@ public class Main
 		switch (cellNum)	//Identify the info held in the current Column, then switch to the next one for next iteration          
 		{  
 			case 0: //TEACHERNO 
-				System.out.print(cell.getNumericCellValue() + "\t\t\t");
 				current.setID((int)cell.getNumericCellValue());
 				break;  
 			case 1: //LASTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
 				current.setLastName(cell.getStringCellValue());
 				break; 
 			case 2: //FIRSTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
 				current.setFirstName(cell.getStringCellValue());
 				break; 
 			case 3: //CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");
-				
+				String subject = cell.getStringCellValue();
+				//Set this teacher as the teacher for a class in each period
+				if(period[0].getSubject(subject) != null) period[0].getSubjectList().get(subject).setTeacher(current);
+				if(period[1].getSubject(subject) != null) period[1].getSubjectList().get(subject).setTeacher(current);
+				if(period[3].getSubject(subject) != null) period[3].getSubjectList().get(subject).setTeacher(current);
+				if(period[4].getSubject(subject) != null) period[4].getSubjectList().get(subject).setTeacher(current);
 				break; 
 			default:  
 		}  
@@ -189,50 +212,53 @@ public class Main
 		
 		Student current = students.get(students.size()-1); //Get the most recent student in the list
 		
+		String subject;
 		switch (cellNum)	//Identify the info held in the current Column, then switch to the next one for next iteration          
 		{  
 			case 0: //STUDENTNO 
-				System.out.print(cell.getNumericCellValue() + "\t\t\t");		
 				current.setID((int)cell.getNumericCellValue());
 				break;  
 			case 1: //LASTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");
 				current.setLastName(cell.getStringCellValue());
 				break; 
 			case 2: //FIRSTNAME
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
 				current.setFirstName(cell.getStringCellValue());
 				break; 
 			case 3: //GRADE
-				System.out.print(cell.getNumericCellValue() + "\t\t\t"); 
 				current.setGrade((int)cell.getNumericCellValue());
 				break; 
 			case 4: //PERIOD 1 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t"); 
-				String subject = cell.getStringCellValue();
-				if(subjectList.get(subject) == null) //If it doesnt exist in the list yet
-				{
-					subjectList.put(subject, new Subject(subject)); // then add it!
-					//period.add(subjectList.get(subject));
-				}
-				
-				subjectList.get(subject).getStudentList().add(current); //add the current student to the subject in this period.
+				subject = cell.getStringCellValue();
+				if(period[0].getSubjectList().get(subject) == null) //if period doesnt contains this class
+					period[0].addSubject(new Subject(subject)); //then add it
+						
+				period[0].getSubject(subject).addStudent(current); //add the student to the subject in the subject list of a period
 				break; 
 			case 5: //PERIOD 2 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				subject = cell.getStringCellValue();
+				if(period[1].getSubjectList().get(subject) == null) //if period doesnt contains this class
+					period[1].addSubject(new Subject(subject)); //then add it
+						
+				period[1].getSubject(subject).addStudent(current); //add the student to the subject in the subject list of a period
 				break; 
 			case 6: //PERIOD 3 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				subject = cell.getStringCellValue();
+				if(period[3].getSubjectList().get(subject) == null) //if period doesnt contains this class
+					period[3].addSubject(new Subject(subject)); //then add it
+						
+				period[3].getSubject(subject).addStudent(current); //add the student to the subject in the subject list of a period
 				break; 
 			case 7: //PERIOD 4 CLASS
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
+				subject = cell.getStringCellValue();
+				if(period[4].getSubjectList().get(subject) == null) //if period doesnt contains this class
+					period[4].addSubject(new Subject(subject)); //then add it
+						
+				period[4].getSubject(subject).addStudent(current); //add the student to the subject in the subject list of a period
 				break; 
 			case 8: //HEALTH CONDITION
-				System.out.print(cell.getStringCellValue() + "\t\t\t");  
 				current.setHealthConditions(cell.getStringCellValue());
 				break; 
 			case 9: //EXTRACURRICULAR
-				System.out.print(cell.getStringCellValue() + "\t\t\t");
 				break; 
 			default:  
 		}  

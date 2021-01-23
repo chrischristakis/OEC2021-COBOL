@@ -14,6 +14,8 @@ public class TeachersAssistant extends Person {
 		String[] subjectArray = {firstPeriod, secondPeriod, thirdPeriod, fourthPeriod};
 		this.subjectArray = subjectArray;
 	}
+	
+	public TeachersAssistant() {}
 
 	
 	// Getters and Setters ---
@@ -36,6 +38,11 @@ public class TeachersAssistant extends Person {
 	
 	public String[] getSubjectArray() {
 		return subjectArray;
+	}
+	
+	public void setSubject(String subject, int index)
+	{
+		subjectArray[index] = subject;
 	}
 	
 }

@@ -19,6 +19,8 @@ public class Subject {
 		this.studentList = new ArrayList<Student>(20);
 	}
 	
+	public Subject() {}
+	
 	//Getters and Setters ---
 	
 	public String getClassName() {

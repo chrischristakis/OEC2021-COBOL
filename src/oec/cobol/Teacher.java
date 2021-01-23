@@ -15,6 +15,8 @@ public class Teacher extends Person {
 		this.ID = ID;
 	}
 	
+	public Teacher() {}
+	
 	
 	// Getters and Setters ---
 	

@@ -20,15 +20,20 @@ public class Student extends Person {
 		this.ID = ID;
 	}
 
+	public Student() {}
 	
 	// Getters and Setters ---
-	
+
 	public String getHealthConditions() {
 		return this.healthConditions;
 	}
 	
 	public int getGrade() {
 		return grade;
+	}
+	
+	public void setGrade(int grade) {
+		this.grade = grade;
 	}
 	
 	//For each grade above grade 9, we add a 25% higher chance of infection
@@ -44,6 +49,11 @@ public class Student extends Person {
 	
 	public int getID() {
 		return ID;
+	}
+	
+	public void setID(int iD)
+	{
+		ID = iD;
 	}
 	
 }

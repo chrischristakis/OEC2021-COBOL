@@ -1,20 +1,22 @@
 package oec.cobol;
 
-import java.io.File;  
-import java.io.FileInputStream;  
-import java.util.Iterator;  
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;  
-import org.apache.poi.xssf.usermodel.XSSFSheet;  
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
 
 
 public class Main 
 {
 	
-	//CREATE ARRAY OF STUDENTS
-	//CREATE ARRAY OF PERIODS
+	ArrayList<Student> students = new ArrayList<Student>();
+	ArrayList<Subject> subjects = new ArrayList<Subject>();
 	
 	//Holds the information of the entire spreadsheet program
 	private static XSSFWorkbook workbook;

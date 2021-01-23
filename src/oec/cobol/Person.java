@@ -16,7 +16,7 @@ public class Person {
 		this.lName = lastName;
 	}
 	
-	
+	public Person() {}
 	
 	// Getters and Setters ---
 	
@@ -38,6 +38,14 @@ public class Person {
 		return lName;
 	}
 	
+	public void setFirstName(String fName) {
+		this.fName = fName;
+	}
+
+	public void setLastName(String lName) {
+		this.lName = lName;
+	}
+
 	public String getFullName() {
 		return fName + " " + lName;
 	}

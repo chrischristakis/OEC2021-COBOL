@@ -66,13 +66,13 @@ public class Main
 			}
 			period[j].updateInfectivityPerRoom();
 			
-			System.out.println("PERIOD " + periodNum);
+			System.out.println("PERIOD " + periodNum + "---------");
 			for(int i = 0; i < students.size(); i++)
-				System.out.println(students.get(i).getID() + " " + students.get(i).getFullName() + " " + students.get(i).getInfectivity());
+				System.out.println(students.get(i).getID() + " " + students.get(i).getFullName() + ":\t\t\t " + students.get(i).getInfectivity());
 			
 			System.out.println("ASSISTANTS:");
 			for(int i = 0; i < assistants.size(); i++)
-				System.out.println(assistants.get(i).getFullName() + " " + assistants.get(i).getInfectivity());
+				System.out.println(assistants.get(i).getFullName() + ":\t\t\t " + assistants.get(i).getInfectivity());
 			System.out.println("\n\n\n\n\n");
 			periodNum++;
 		}

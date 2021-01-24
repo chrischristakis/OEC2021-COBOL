@@ -37,7 +37,7 @@ public class Period {
 	        //System.out.println(classInfectivity);
 	        c.setInfectivity(c.getInfectivity() + c.calculateRoomInfectivity());
 	        for(Student s : c.getStudentList()) {
-	            s.setInfectivity(s.getInfectivity() + classInfectivity);
+	            s.setInfectivity(s.getInfectivity() * s.getMultGrade() * s.getMultHealthConditions() + classInfectivity);
 	        }
 	        for(TeachersAssistant ta : c.getTAList()) {
 	            ta.setInfectivity(ta.getInfectivity() + classInfectivity);

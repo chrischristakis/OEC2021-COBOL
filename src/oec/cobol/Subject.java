@@ -11,7 +11,7 @@ public class Subject {
 	 */
 	
 	public static final double R_NOUGHT = 3.0;
-	public static final double ROOM_INFECTIVITY = 0.05;
+	public static final double ROOM_INFECTIVITY = 0.001;
 	
 	private String name;							//Name of the class
 	private ArrayList<Student> studentList;			//List of students

@@ -34,9 +34,10 @@ public class Period {
 		for (String subject_name: subjectList.keySet()){
 			Subject c = subjectList.get(subject_name);
 	        double classInfectivity = c.calculateInfectivityFromPersons();
+	        //System.out.println(classInfectivity);
 	        c.setInfectivity(c.getInfectivity() + c.calculateRoomInfectivity());
 	        for(Student s : c.getStudentList()) {
-	            s.setInfectivity(s.getInfectivity() + classInfectivity * s.getMultHealthConditions() * s.getMultGrade());
+	            s.setInfectivity(s.getInfectivity() + classInfectivity);
 	        }
 	        for(TeachersAssistant ta : c.getTAList()) {
 	            ta.setInfectivity(ta.getInfectivity() + classInfectivity);

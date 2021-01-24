@@ -50,17 +50,31 @@ public class Main
 		
 		students.remove(students.get(students.size()-1));//remove last element for a bug fix.
 		
-		for(int j = 0; j < period.length; j++)
+		int periodNum = 1;
+		for(int j = 0; j < period.length; j++) 
 		{
 			if(period[j] == null) continue;
-			System.out.println("----PERIOD " + j + "----");
-			for (String name: period[j].getSubjectList().keySet()){
-	            String key = name.toString();
-	            Subject value = period[j].getSubjectList().get(name);  
-	            System.out.println(key + " " + value.getTeacher().getFullName());
-	            for(int i = 0; i < period[j].getSubjectList().get(name).getStudentList().size(); i++)
-	            	System.out.println(period[j].getSubjectList().get(name).getStudentList().get(i).getID() + " " + value.getStudentList().get(i).getInfectivity());
+
+			//Transfer infectivity
+			if(j > 0 && j != 3)
+			{
+				for (String subject_name: period[j-1].getSubjectList().keySet())
+				{
+		            Subject subject = period[j-1].getSubjectList().get(subject_name); //previous subject room infectivity 
+		            period[j].getSubjectList().get(subject_name).setInfectivity(subject.calculateRoomInfectivity());  
+				}
 			}
+			period[j].updateInfectivityPerRoom();
+			
+			System.out.println("PERIOD " + periodNum);
+			for(int i = 0; i < students.size(); i++)
+				System.out.println(students.get(i).getID() + " " + students.get(i).getFullName() + " " + students.get(i).getInfectivity());
+			
+			System.out.println("ASSISTANTS:");
+			for(int i = 0; i < assistants.size(); i++)
+				System.out.println(assistants.get(i).getFullName() + " " + assistants.get(i).getInfectivity());
+			System.out.println("\n\n\n\n\n");
+			periodNum++;
 		}
 	}
 	
@@ -122,9 +136,10 @@ public class Main
 				students.get((int)cell.getNumericCellValue()-1).setInfectivity(1.0); //studentno-1 gives index of student in array of students.
 				break;  
 			case 1: //LASTNAME
-				for(int i = 0; i < assistants.size(); i++)
-					if(assistants.get(i).getLastName().equals(cell.getStringCellValue()))
-						assistants.get(i).setInfectivity(1.0);
+				if(TA)
+					for(int i = 0; i < assistants.size(); i++)
+						if(assistants.get(i).getLastName().equals(cell.getStringCellValue()))
+							assistants.get(i).setInfectivity(1.0);
 				TA = false;
 				break; 
 			case 2: //FIRSTNAME
@@ -259,6 +274,7 @@ public class Main
 				current.setHealthConditions(cell.getStringCellValue());
 				break; 
 			case 9: //EXTRACURRICULAR
+				current.getInfectivity();
 				break; 
 			default:  
 		}  
